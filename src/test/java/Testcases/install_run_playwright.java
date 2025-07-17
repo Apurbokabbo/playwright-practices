@@ -1,6 +1,7 @@
 package Testcases;
 
 import com.microsoft.playwright.*;
+import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import com.microsoft.playwright.options.AriaRole;
 import org.testng.annotations.Test;
 
@@ -62,6 +63,29 @@ public class install_run_playwright {
 
         browser.close();
         playwright.close();
+    }
+
+    @Test
+    public void loginmethod(){
+         Playwright playwright = Playwright.create();
+         Browser browser =playwright.chromium().launch(
+                 new BrowserType.LaunchOptions().setHeadless(false)
+         );
+         Page page = browser.newPage();
+         page.navigate("https://freelance-learn-automation.vercel.app/login");
+         PlaywrightAssertions.assertThat(page).hasTitle("Learn Automation Courses");
+         page.locator("#email1").fill("admin@email.com");
+         page.locator("xpath =//input[@id='password1']").fill("admin@123");
+         page.getByText("Sign in").nth(1).click();
+         PlaywrightAssertions.assertThat(page.locator(".welcomeMessage")).containsText("Welcome");
+         page.waitForTimeout(3000);
+         //sign out
+         page.getByAltText("menu").click();
+         page.locator("xpath=//button[normalize-space()='Sign out']").click();
+         PlaywrightAssertions.assertThat(page).hasURL(Pattern.compile("login"));
+
+         page.close();
+         browser.close();
     }
 
 
