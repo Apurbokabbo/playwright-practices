@@ -69,7 +69,7 @@ public class install_run_playwright {
     public void loginmethod(){
          Playwright playwright = Playwright.create();
          Browser browser =playwright.chromium().launch(
-                 new BrowserType.LaunchOptions().setHeadless(false)
+                 new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(500)
          );
          Page page = browser.newPage();
          page.navigate("https://freelance-learn-automation.vercel.app/login");
