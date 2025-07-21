@@ -20,19 +20,25 @@ public class registration_testcases {
                 new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(500)
         );
         Page page = browser.newPage();
+        page.setDefaultNavigationTimeout(30000);
         page.navigate("https://freelance-learn-automation.vercel.app/login");
         //https://freelance-learn-automation.vercel.app/signup
 
         page.getByText("New User? Signup").click();
+
         PlaywrightAssertions.assertThat(page.getByText("Sign up").last()).isDisabled();
 
         page.locator("#name").fill(name);
-        page.getByPlaceholder("Email").fill(name+System.currentTimeMillis()+"@gmail.com");
+
+        page.pause();
+        page.getByPlaceholder("Email").fill("abcd"+System.currentTimeMillis()+"@gmail.com");
         page.getByPlaceholder("Password").fill("test@123");
 
         //checked
-        page.getByText("Java").nth(0).click();
-        PlaywrightAssertions.assertThat(page.locator("xpath=//label[text()='Java']//preceding::input[1]")).isChecked();
+        page.getByText("Python").nth(0).click();
+
+//        PlaywrightAssertions.assertThat(page.getByText("Python").nth(1)).isChecked();
+        PlaywrightAssertions.assertThat(page.locator("xpath=//input[@id='685dfc80cee8824e17336e2a']")).isChecked();
 
         //radio button
         page.locator("xpath =//input[@value='Female']").click();
@@ -49,6 +55,10 @@ public class registration_testcases {
         PlaywrightAssertions.assertThat(page.getByText("Sign up").last()).isEnabled();
         page.getByText("Sign up").last().click();
         page.waitForTimeout(3000);
+
+        browser.close();
+        playwright.close();
+
 
 
     }
