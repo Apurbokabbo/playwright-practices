@@ -59,8 +59,7 @@ public class registration_testcases {
         browser.close();
         playwright.close();
 
-
-
     }
+    
 
 }
