@@ -76,6 +76,39 @@ public class codegen {
             page.getByText("Address is empty").click();
         }
     }
+
+    @Test
+    public void addToCart () {
+        try (Playwright playwright = Playwright.create()) {
+            Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
+                    .setHeadless(false));
+            BrowserContext context = browser.newContext();
+            Page page = context.newPage();
+            page.navigate("https://freelance-learn-automation.vercel.app/");
+            page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Add to Cart right arrow")).nth(1).click();
+            page.getByRole(AriaRole.DIALOG).getByRole(AriaRole.BUTTON, new Locator.GetByRoleOptions().setName("Log in")).click();
+            page.getByPlaceholder("Enter Email").click();
+            page.getByPlaceholder("Enter Email").fill("admin#email.com");
+            page.getByPlaceholder("Enter Password").click();
+            page.getByPlaceholder("Enter Password").fill("admin@123");
+            page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
+            page.getByPlaceholder("Enter Email").click();
+            page.getByPlaceholder("Enter Email").press("ArrowLeft");
+            page.getByPlaceholder("Enter Email").press("ArrowLeft");
+            page.getByPlaceholder("Enter Email").press("ArrowLeft");
+            page.getByPlaceholder("Enter Email").press("ArrowLeft");
+            page.getByPlaceholder("Enter Email").press("ArrowLeft");
+            page.getByPlaceholder("Enter Email").press("ArrowLeft");
+            page.getByPlaceholder("Enter Email").press("ArrowLeft");
+            page.getByPlaceholder("Enter Email").press("ArrowLeft");
+            page.getByPlaceholder("Enter Email").press("ArrowLeft");
+            page.getByPlaceholder("Enter Email").fill("admin@email.com");
+            page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
+
+            context.storageState(new BrowserContext.StorageStateOptions().setPath(Paths.get("auth.json")));
+    }}
+
+
 /* You can use below commands for codegen
 
 mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="codegen demo.playwright.dev/todomvc"
