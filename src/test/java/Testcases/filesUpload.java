@@ -1,13 +1,11 @@
 package Testcases;
 
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.*;
 import org.testng.annotations.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class filesUpload {
 
@@ -114,6 +112,35 @@ public class filesUpload {
       String uploadedText = page.textContent("#uploaded-files");
       System.out.println("Uploaded files text: " + uploadedText);
 
+      // Clean up
+      page.close();
+      browser.close();
+    }
+  }
+
+  @Test
+  public void fileUploadByFileChooser() {
+    try (Playwright playwright = Playwright.create()) {
+      Browser browser = playwright.chromium().launch(
+              new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(500)
+      );
+      Page page = browser.newPage();
+      page.setDefaultNavigationTimeout(30000);
+
+      // Upload multiple files
+      Path[] files = {
+              Paths.get("files/1753706901022.jpg"),
+              Paths.get("files/1753683034617.jpg")
+      };
+
+      page.navigate("https://the-internet.herokuapp.com/upload");
+      // Upload multiple files by passing an array directly
+      FileChooser filechooser = page.waitForFileChooser(()-> page.locator(("#drag-drop-upload")).click());
+      //single file upload
+//      filechooser.setFiles(Paths.get("files/1753683034617.jpg"));
+        //multiple files upload
+
+      filechooser.setFiles(files);
       // Clean up
       page.close();
       browser.close();
