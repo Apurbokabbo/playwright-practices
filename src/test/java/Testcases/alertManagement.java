@@ -1,6 +1,7 @@
 package Testcases;
 
 import com.microsoft.playwright.*;
+import com.microsoft.playwright.options.AriaRole;
 import org.testng.annotations.Test;
 
 public class alertManagement {
@@ -108,38 +109,25 @@ public class alertManagement {
     @Test
     public void createCourseUsingAlertPrompt() throws InterruptedException {
         try (Playwright playwright = Playwright.create()) {
-            Browser browser = playwright.chromium().launch(
-                    new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(500)
-            );
-            Page page = browser.newPage();
-            page.navigate("https://freelance-learn-automation.vercel.app/login");
+            Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
+                    .setHeadless(false));
+            BrowserContext context = browser.newContext();
+            Page page = context.newPage();
+            page.navigate("https://freelance-learn-automation.vercel.app/");
+            page.getByRole(AriaRole.IMG, new Page.GetByRoleOptions().setName("menu")).click();
+            page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Log in")).click();
+            page.getByPlaceholder("Enter Email").click();
+            page.getByPlaceholder("Enter Email").fill("admin@email.com");
+            page.getByPlaceholder("Enter Password").click();
+            page.getByPlaceholder("Enter Password").fill("admin@123");
+            page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
 
-            // Login
-            page.getByPlaceholder("Email").fill("admin@email.com");
-            page.getByPlaceholder("Password").fill("admin@123");
-            page.locator("//button[normalize-space()='Sign in']").click();
+            page.getByText("Manage", new Page.GetByTextOptions().setExact(true)).click();
 
-            // Navigate to Manage Categories
-            page.locator("//span[normalize-space()='Manage']").click();
-            page.locator("//a[normalize-space()='Manage Categories']").click();
-
-            // Handle prompt before triggering it
-            page.onDialog(dialog -> {
-                System.out.println("Prompt text: " + dialog.message());
-                dialog.accept("Java Automation Course");
+            Page page1 = page.waitForPopup(() -> {
+                page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("manage category Manage")).click();
             });
-
-            // Trigger the prompt
-            Locator addCategoryBtn = page.locator("//button[normalize-space()='Add New Category']");
-            addCategoryBtn.click();
-
-
-            // Optional: assert success message appears (UI feedback)
-            page.waitForTimeout(2000); // Give time to reflect changes
-
-            // Clean up
-            page.close();
-            browser.close();
+            page1.getByRole(AriaRole.CELL, new Page.GetByRoleOptions().setName("automation")).click();
         }
     }
 
