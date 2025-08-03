@@ -1,8 +1,6 @@
 package Testcases;
 
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.*;
 import org.testng.annotations.Test;
 
 public class alertManagement {
@@ -102,6 +100,44 @@ public class alertManagement {
             page.click("button:has-text('Click for JS Prompt')");
 
             // Close the page and browser
+            page.close();
+            browser.close();
+        }
+    }
+
+    @Test
+    public void createCourseUsingAlertPrompt() throws InterruptedException {
+        try (Playwright playwright = Playwright.create()) {
+            Browser browser = playwright.chromium().launch(
+                    new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(500)
+            );
+            Page page = browser.newPage();
+            page.navigate("https://freelance-learn-automation.vercel.app/login");
+
+            // Login
+            page.getByPlaceholder("Email").fill("admin@email.com");
+            page.getByPlaceholder("Password").fill("admin@123");
+            page.locator("//button[normalize-space()='Sign in']").click();
+
+            // Navigate to Manage Categories
+            page.locator("//span[normalize-space()='Manage']").click();
+            page.locator("//a[normalize-space()='Manage Categories']").click();
+
+            // Handle prompt before triggering it
+            page.onDialog(dialog -> {
+                System.out.println("Prompt text: " + dialog.message());
+                dialog.accept("Java Automation Course");
+            });
+
+            // Trigger the prompt
+            Locator addCategoryBtn = page.locator("//button[normalize-space()='Add New Category']");
+            addCategoryBtn.click();
+
+
+            // Optional: assert success message appears (UI feedback)
+            page.waitForTimeout(2000); // Give time to reflect changes
+
+            // Clean up
             page.close();
             browser.close();
         }
