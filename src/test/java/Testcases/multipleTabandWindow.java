@@ -28,15 +28,16 @@ public class multipleTabandWindow {
         );
         BrowserContext context = browser.newContext();
         Page page = context.newPage();
-        page.navigate("https://freelance-learn-automation.vercel.app/login");
+        page.navigate("https://www.apurbokabbo.com/");
 
         Page newPage = context.waitForPage(()->
         {
-            page.locator("xpath=//div[@class='container-child']//a[3]//*[name()='svg']").click();
+            page.locator("//div[@id='colorlib-page']//li[1]//a[1]").click();
         });
 
-        newPage.locator("xpath = //*[local-name()='path' and @fill='currentColor']/parent::*[local-name()='svg']").click();
+//        newPage.locator("xpath = //*[local-name()='path' and @fill='currentColor']/parent::*[local-name()='svg']").click();
         page.bringToFront();
+        Thread.sleep(2000);
         newPage.bringToFront();
         Thread.sleep(2000);
 
