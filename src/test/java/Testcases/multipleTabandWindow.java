@@ -21,7 +21,7 @@ public class multipleTabandWindow {
     //https://playwright.dev/docs/api/class-browsercontext
 
     @Test
-    public void manageMultipleTabs() {
+    public void manageMultipleTabs() throws  InterruptedException {
         Playwright playwright = Playwright.create();
         Browser browser = playwright.chromium().launch(
                 new com.microsoft.playwright.BrowserType.LaunchOptions().setHeadless(false).setSlowMo(500)
@@ -30,9 +30,15 @@ public class multipleTabandWindow {
         Page page = context.newPage();
         page.navigate("https://freelance-learn-automation.vercel.app/login");
 
-        Page newPage = context.waitForPage(()-> {
-            page.click("text=Open New Tab");
+        Page newPage = context.waitForPage(()->
+        {
+            page.locator("xpath=//div[@class='container-child']//a[3]//*[name()='svg']").click();
         });
+
+        newPage.locator("xpath = //*[local-name()='path' and @fill='currentColor']/parent::*[local-name()='svg']").click();
+        page.bringToFront();
+        newPage.bringToFront();
+        Thread.sleep(2000);
 
 
     }
